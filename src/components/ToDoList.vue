@@ -18,6 +18,7 @@
        <v-text-field 
        solo 
        clearable 
+       placeholder="Enter ToDo ..."
        :value="todo" 
        v-on:keyup.enter="onEnter"
        v-model.lazy="todo"
@@ -26,10 +27,13 @@
     </v-row>
      <v-row>
       <v-col align="center" justify="center">
-        <ToDos :todos="todos" v-on:delete-todo="deleteTodo" />
+        <ToDos :todos="undoneTodos" 
+        v-on:delete-todo="deleteTodo" 
+        v-on:done="setToDone"
+        />
       </v-col>
     </v-row>
-    <v-row>
+    <v-row v-if="undoneTodos.length !== 0 && doneTodos.length !== 0">
       <v-col>
             <v-divider></v-divider>
       </v-col>
@@ -37,7 +41,10 @@
 
      <v-row>
       <v-col align="center">
-        <Done :todos="todos" v-on:delete-todo="deleteTodo"/>
+        <Done :todos="doneTodos" 
+        v-on:delete-todo="deleteTodo"
+        v-on:undone="setToUndone"
+        />
       </v-col>
     </v-row>
     </v-container>
@@ -70,10 +77,31 @@ methods: {
       });
       this.todo= '';
     },
+    setToDone(id){
+      console.log('Done', id)
+       console.log(this.todos)
+      const updatedTodos = this.todos.filter(todo => (todo.id === id ? todo.done = true : todo));
+       this.todos = updatedTodos;
+    },
+    setToUndone(id){
+      console.log('Undone', id)
+      console.log(this.todos)
+      const updatedTodos = this.todos.filter(todo => (todo.id === id ? todo.done = false : todo));
+      console.log('updated', updatedTodos)
+      this.todos = updatedTodos;
+    },
     deleteTodo(id) {
-      const newTodos = this.todos.filter(todo => todo.id !== id);
-      this.todos = newTodos;
+      const updatedTodos = this.todos.filter(todo => todo.id !== id);
+      this.todos = updatedTodos;
     },
   },
+  computed:{
+      undoneTodos: function () {
+        return this.todos.filter(todo => todo.done === false)
+      },
+      doneTodos: function () {
+        return this.todos.filter(todo => todo.done === true)
+      }
+    }   
 }
 </script>
