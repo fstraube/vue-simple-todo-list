@@ -14,7 +14,7 @@
               {{ todo.title }}
             </v-col>
             <v-col class="caption">
-              {{ todo.timestamp }}
+              {{ moment(todo.timestamp) }}
             </v-col>
           </v-row>
         </v-container>
@@ -42,10 +42,14 @@
 </template>
 
 <script>
+import moment from "moment";
 export default {
   name: "Done",
   props: ["todos"],
   methods: {
+    moment(timestamp) {
+      return moment(timestamp).format("LLL");
+    },
     toogleCheckbox(id) {
       this.$emit("undone", id);
     },
