@@ -35,6 +35,7 @@ export default {
       })
         .then((response) => {
           console.log(response);
+          this.$toast.success("Info toast");
           this.currentFile = null;
         })
         .catch((error) => {

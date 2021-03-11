@@ -30,7 +30,7 @@ const getListFileData = () => {
 };
 
 const saveFile = (data) => {
-  return http.post("/save", data, {
+  return http.post("/saveFile", data, {
     headers: {
       "Content-Type": "application/json",
     }
@@ -38,7 +38,12 @@ const saveFile = (data) => {
 
 }
 
-const deleteFile = () => {
+const deleteFile = (data) => {
+ return http.post("/deleteFile", data, {
+    headers: {
+      "Content-Type": "application/json",
+    }
+  });
 
 }
 

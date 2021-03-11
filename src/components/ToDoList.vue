@@ -94,18 +94,10 @@ export default {
       try {
         const response = await UploadService.getListFileData();
         if (response.data.length !== 0) {
-          response.data.map((todo) =>
-            todo.id === "" ? (todo.id = uuidv4()) : todo.id
-          );
-          response.data.map((todo) =>
-            todo.timestamp === ""
-              ? (todo.timestamp = new Date())
-              : todo.timestamp
-          );
           response.data.map((todo) => this.todos.push(todo));
         }
       } catch (error) {
-        console.log(error);
+        this.$vToastify.error(error.message);
       }
     },
     async onEnter() {
@@ -116,8 +108,24 @@ export default {
         done: false,
         timestamp: new Date(),
       };
-      await UploadService.saveFile(createdToDo);
-      location.reload();
+      try {
+        const res = await UploadService.saveFile(createdToDo);
+        this.updateToDoList(res.data.message);
+      } catch (error) {
+        this.$vToastify.error(error.message);
+      }
+    },
+    async updateToDoList(msg) {
+      try {
+        const res = await UploadService.getListFileData();
+        this.todos = [];
+        if (res.data.length !== 0) {
+          res.data.map((todo) => this.todos.push(todo));
+        }
+        this.$vToastify.success(msg);
+      } catch (error) {
+        this.$vToastify.error(error.message);
+      }
     },
     setToDone(id) {
       this.todos.filter((todo) => (todo.id === id ? (todo.done = true) : todo));
@@ -127,9 +135,14 @@ export default {
         todo.id === id ? (todo.done = false) : todo
       );
     },
-    deleteTodo(id) {
-      const updatedTodos = this.todos.filter((todo) => todo.id !== id);
-      this.todos = updatedTodos;
+    async deleteTodo(id) {
+      const deleteTodo = this.todos.filter((todo) => todo.id === id);
+      try {
+        const res = await UploadService.deleteFile(deleteTodo[0]);
+        this.updateToDoList(res.data.message);
+      } catch (error) {
+        this.$vToastify.error(error.message);
+      }
     },
   },
   computed: {
