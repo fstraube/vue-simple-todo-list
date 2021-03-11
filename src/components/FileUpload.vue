@@ -8,9 +8,20 @@
         id="upload-file"
         @change="(e) => onFileChanged(e)"
       />
-      <v-btn fab color="primary" @click="clickUploadBtn">
-        <v-icon>mdi-file-upload</v-icon>
-      </v-btn>
+      <v-tooltip top>
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn
+            fab
+            color="primary"
+            @click="clickUploadBtn"
+            v-bind="attrs"
+            v-on="on"
+          >
+            <v-icon>mdi-file-upload</v-icon>
+          </v-btn>
+        </template>
+        <span>Upload</span>
+      </v-tooltip>
     </v-col>
   </v-row>
 </template>

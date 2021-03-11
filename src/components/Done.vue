@@ -1,23 +1,41 @@
 <template>
-  <v-list>
+  <v-list dense>
     <v-list-item v-for="todo in todos" :key="todo.id">
       <v-list-item-action>
         <v-checkbox
           :input-value="todo.done"
           @change="toogleCheckbox(todo.id)"
-        ></v-checkbox>
+        />
       </v-list-item-action>
       <v-list-item-content>
-        <v-list-item-title
-          align="left"
-          class="text-decoration-line-through"
-          v-text="todo.title"
-        >
-        </v-list-item-title>
+        <v-container>
+          <v-row>
+            <v-col align="left" class="overline text-decoration-line-through">
+              {{ todo.title }}
+            </v-col>
+            <v-col class="caption">
+              {{ todo.timestamp }}
+            </v-col>
+          </v-row>
+        </v-container>
       </v-list-item-content>
       <v-list-item-icon>
-        <v-icon v-on:click="downloadTodo(todo.id)">mdi-file-download</v-icon>
-        <v-icon v-on:click="deleteTodo(todo.id)">mdi-delete</v-icon>
+        <v-tooltip left>
+          <template v-slot:activator="{ on, attrs }">
+            <v-icon v-on:click="downloadTodo(todo.id)" v-bind="attrs" v-on="on"
+              >mdi-file-download</v-icon
+            >
+          </template>
+          <span>Download</span>
+        </v-tooltip>
+        <v-tooltip left>
+          <template v-slot:activator="{ on, attrs }">
+            <v-icon v-on:click="deleteTodo(todo.id)" v-bind="attrs" v-on="on"
+              >mdi-delete</v-icon
+            >
+          </template>
+          <span>Delete</span>
+        </v-tooltip>
       </v-list-item-icon>
     </v-list-item>
   </v-list>

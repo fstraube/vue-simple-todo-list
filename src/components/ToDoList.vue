@@ -116,6 +116,7 @@ export default {
         done: false,
         timestamp: new Date(),
       };
+      this.todo = "";
       this.saveTodo(createdToDo);
     },
     async saveTodo(updatedTodo) {
