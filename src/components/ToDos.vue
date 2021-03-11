@@ -1,6 +1,6 @@
 <template>
   <v-list>
-    <v-list-item v-for="todo in todos" :key="todo.id">
+    <v-list-item class="listItem" v-for="todo in todos" :key="todo.id">
       <v-list-item-action>
         <v-checkbox
           :input-value="todo.done"
@@ -12,11 +12,19 @@
         </v-list-item-title>
       </v-list-item-content>
       <v-list-item-icon>
+        <v-icon v-on:click="downloadTodo(todo.id)">mdi-file-download</v-icon>
+        <span></span>
         <v-icon v-on:click="deleteTodo(todo.id)">mdi-delete</v-icon>
       </v-list-item-icon>
     </v-list-item>
   </v-list>
 </template>
+
+<style scoped>
+.listItem:hover {
+  background: lightblue;
+}
+</style>
 
 <script>
 export default {
@@ -28,6 +36,9 @@ export default {
     },
     deleteTodo(id) {
       this.$emit("delete-todo", id);
+    },
+    downloadTodo(id) {
+      this.$emit("download-todo", id);
     },
   },
 };

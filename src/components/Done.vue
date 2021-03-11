@@ -16,6 +16,7 @@
         </v-list-item-title>
       </v-list-item-content>
       <v-list-item-icon>
+        <v-icon v-on:click="downloadTodo(todo.id)">mdi-file-download</v-icon>
         <v-icon v-on:click="deleteTodo(todo.id)">mdi-delete</v-icon>
       </v-list-item-icon>
     </v-list-item>
@@ -32,6 +33,9 @@ export default {
     },
     deleteTodo(id) {
       this.$emit("delete-todo", id);
+    },
+    downloadTodo(id) {
+      this.$emit("download-todo", id);
     },
   },
 };

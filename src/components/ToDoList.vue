@@ -45,6 +45,7 @@
         <ToDos
           :todos="undoneTodos"
           v-on:delete-todo="deleteTodo"
+          v-on:download-todo="downloadTodo"
           v-on:done="setToDone"
         />
       </v-col>
@@ -60,12 +61,19 @@
         <Done
           :todos="doneTodos"
           v-on:delete-todo="deleteTodo"
+          v-on:download-todo="downloadTodo"
           v-on:undone="setToUndone"
         />
       </v-col>
     </v-row>
   </v-container>
 </template>
+
+<style scoped>
+.listItem:hover {
+  background: lightblue;
+}
+</style>
 
 <script>
 import ToDos from "./ToDos";
@@ -108,8 +116,11 @@ export default {
         done: false,
         timestamp: new Date(),
       };
+      this.saveTodo(createdToDo);
+    },
+    async saveTodo(updatedTodo) {
       try {
-        const res = await UploadService.saveFile(createdToDo);
+        const res = await UploadService.saveFile(updatedTodo);
         this.updateToDoList(res.data.message);
       } catch (error) {
         this.$vToastify.error(error.message);
@@ -128,18 +139,28 @@ export default {
       }
     },
     setToDone(id) {
-      this.todos.filter((todo) => (todo.id === id ? (todo.done = true) : todo));
+      const currentTodo = this.todos.filter((todo) => todo.id === id);
+      const updatedTodo = { ...currentTodo[0], done: true };
+      this.saveTodo(updatedTodo);
     },
     setToUndone(id) {
-      this.todos.filter((todo) =>
-        todo.id === id ? (todo.done = false) : todo
-      );
+      const currentTodo = this.todos.filter((todo) => todo.id === id);
+      const updatedTodo = { ...currentTodo[0], done: false };
+      this.saveTodo(updatedTodo);
     },
     async deleteTodo(id) {
       const deleteTodo = this.todos.filter((todo) => todo.id === id);
       try {
         const res = await UploadService.deleteFile(deleteTodo[0]);
         this.updateToDoList(res.data.message);
+      } catch (error) {
+        this.$vToastify.error(error.message);
+      }
+    },
+    async downloadTodo(id) {
+      const downloadTodo = this.todos.filter((todo) => todo.id === id);
+      try {
+        await UploadService.downloadFile(downloadTodo[0]);
       } catch (error) {
         this.$vToastify.error(error.message);
       }
