@@ -1,21 +1,20 @@
 <template>
   <v-app>
     <v-main>
-      <ToDoList/>
+      <ToDoList />
     </v-main>
   </v-app>
 </template>
 
 <script>
-import ToDoList from './components/ToDoList';
+import ToDoList from "./components/ToDoList";
 
 export default {
-  name: 'App',
+  name: "App",
 
   components: {
     ToDoList,
   },
-
   data: () => ({
     //
   }),
