@@ -2,7 +2,7 @@
   <v-container mt-16>
     <v-row>
       <v-col align="center">
-        <div class="text-h4">ToDo List</div>
+        <div class="text-h4">Simple ToDo List</div>
       </v-col>
     </v-row>
     <v-row>
@@ -72,6 +72,7 @@ import ToDos from "./ToDos";
 import Done from "./Done";
 import FileUpload from "./FileUpload";
 import { v4 as uuidv4 } from "uuid";
+import UploadService from "../services/FileUploadService";
 
 export default {
   name: "ToDoList",
@@ -85,17 +86,38 @@ export default {
     todo: "",
     todos: [],
   }),
+  created() {
+    this.getUploadedFiles();
+  },
   methods: {
-    onEnter() {
-      if (this.todo !== "") {
-        this.todos.push({
-          id: uuidv4(),
-          title: this.todo,
-          done: false,
-          timestamp: new Date(),
-        });
-        this.todo = "";
+    async getUploadedFiles() {
+      try {
+        const response = await UploadService.getListFileData();
+        if (response.data.length !== 0) {
+          response.data.map((todo) =>
+            todo.id === "" ? (todo.id = uuidv4()) : todo.id
+          );
+          response.data.map((todo) =>
+            todo.timestamp === ""
+              ? (todo.timestamp = new Date())
+              : todo.timestamp
+          );
+          response.data.map((todo) => this.todos.push(todo));
+        }
+      } catch (error) {
+        console.log(error);
       }
+    },
+    async onEnter() {
+      if (this.todo === "") return;
+      const createdToDo = {
+        id: uuidv4(),
+        title: this.todo,
+        done: false,
+        timestamp: new Date(),
+      };
+      await UploadService.saveFile(createdToDo);
+      location.reload();
     },
     setToDone(id) {
       this.todos.filter((todo) => (todo.id === id ? (todo.done = true) : todo));

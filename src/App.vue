@@ -6,6 +6,12 @@
   </v-app>
 </template>
 
+<style>
+html {
+  overflow-y: auto;
+}
+</style>
+
 <script>
 import ToDoList from "./components/ToDoList";
 
