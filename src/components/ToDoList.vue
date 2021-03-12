@@ -45,7 +45,6 @@
         <ToDos
           :todos="undoneTodos"
           v-on:delete-todo="deleteTodo"
-          v-on:download-todo="downloadTodo"
           v-on:done="setToDone"
         />
       </v-col>
@@ -61,7 +60,6 @@
         <Done
           :todos="doneTodos"
           v-on:delete-todo="deleteTodo"
-          v-on:download-todo="downloadTodo"
           v-on:undone="setToUndone"
         />
       </v-col>
@@ -105,7 +103,7 @@ export default {
       try {
         const res = await UploadService.getListFileData();
         if (res.data.length !== 0) {
-          this.updateToDoList(res.data.message);
+          this.updateToDoList("");
         }
       } catch (error) {
         this.$vToastify.error(`Error file data: ${error.message}`);
@@ -113,14 +111,16 @@ export default {
     },
     async onEnter() {
       if (this.todo === "") return;
+
       const createdToDo = {
         id: uuidv4(),
         title: this.todo,
         done: false,
         timestamp: new Date(),
       };
-      this.todo = "";
+      createdToDo.url = `http://localhost:8081/download/${createdToDo.title}_${createdToDo.id}.txt`;
       this.saveTodo(createdToDo);
+      this.todo = "";
     },
     async saveTodo(updatedTodo) {
       try {
@@ -137,7 +137,7 @@ export default {
         if (res.data.length !== 0) {
           res.data.map((todo) => this.todos.push(todo));
         }
-        this.$vToastify.success(msg);
+        msg !== "" ? this.$vToastify.success(msg) : null;
       } catch (error) {
         this.$vToastify.error(`Error update data: ${error.message}`);
       }
@@ -159,14 +159,6 @@ export default {
         this.updateToDoList(res.data.message);
       } catch (error) {
         this.$vToastify.error(`Error delete file: ${error.message}`);
-      }
-    },
-    async downloadTodo(id) {
-      const downloadTodo = this.todos.filter((todo) => todo.id === id);
-      try {
-        await UploadService.downloadFile(downloadTodo[0]);
-      } catch (error) {
-        this.$vToastify.error(`Error download file: ${error.message}`);
       }
     },
   },

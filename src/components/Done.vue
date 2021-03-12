@@ -21,22 +21,25 @@
       </v-list-item-content>
       <v-list-item-icon justify="center">
         <v-col justify="center">
-          <v-tooltip left>
+          <v-tooltip top>
             <template v-slot:activator="{ on, attrs }">
-              <v-icon
-                v-on:click="downloadTodo(todo.id)"
+              <v-btn
+                :href="todo.url"
+                download
+                target="_blank"
                 v-bind="attrs"
                 v-on="on"
-                >mdi-file-download</v-icon
               >
+                <v-icon>mdi-file-download</v-icon>
+              </v-btn>
             </template>
             <span>Download</span>
           </v-tooltip>
-          <v-tooltip left>
+          <v-tooltip top>
             <template v-slot:activator="{ on, attrs }">
-              <v-icon v-on:click="deleteTodo(todo.id)" v-bind="attrs" v-on="on"
-                >mdi-delete</v-icon
-              >
+              <v-btn v-on:click="deleteTodo(todo.id)" v-bind="attrs" v-on="on">
+                <v-icon>mdi-delete</v-icon>
+              </v-btn>
             </template>
             <span>Delete</span>
           </v-tooltip>
@@ -67,9 +70,6 @@ export default {
     },
     deleteTodo(id) {
       this.$emit("delete-todo", id);
-    },
-    downloadTodo(id) {
-      this.$emit("download-todo", id);
     },
   },
 };
