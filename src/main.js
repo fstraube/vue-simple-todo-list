@@ -4,6 +4,7 @@ import vuetify from './plugins/vuetify';
 import VueToastify from 'vue-toastify';
 
 Vue.use(VueToastify, {
+  position: 'top-right',
   successDuration: 2000,
   theme: 'light',
   hideProgressbar: true,

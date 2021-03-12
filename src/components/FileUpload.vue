@@ -33,26 +33,20 @@ export default {
   name: "FileUpload",
   data: () => ({
     currentFile: null,
-    progress: 0,
   }),
   methods: {
     clickUploadBtn() {
       this.$refs.fileInput.click();
     },
-    onFileChanged(e) {
+    async onFileChanged(e) {
       this.currentFile = e.target.files[0];
-      UploadService.upload(this.currentFile, (event) => {
-        this.progress = Math.round((100 * event.loaded) / event.total);
-      })
-        .then((response) => {
-          console.log(response);
-          this.$toast.success("Info toast");
-          this.currentFile = null;
-        })
-        .catch((error) => {
-          console.error(error.message);
-          this.currentFile = null;
-        });
+      try {
+        const res = await UploadService.upload(this.currentFile);
+        this.$emit("upload-success", res.data.message);
+        this.currentFile = null;
+      } catch (error) {
+        this.$vToastify.error(`Error Upload: ${error.message}`);
+      }
     },
   },
 };

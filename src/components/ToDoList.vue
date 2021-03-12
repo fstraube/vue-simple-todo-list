@@ -27,7 +27,7 @@
         </p>
       </v-col>
     </v-row>
-    <FileUpload />
+    <FileUpload v-on:upload-success="uploadSuccess" />
     <v-row>
       <v-col align="center">
         <v-text-field
@@ -95,17 +95,20 @@ export default {
     todos: [],
   }),
   created() {
-    this.getUploadedFiles();
+    this.getFileData();
   },
   methods: {
-    async getUploadedFiles() {
+    uploadSuccess(msg) {
+      this.updateToDoList(msg);
+    },
+    async getFileData() {
       try {
-        const response = await UploadService.getListFileData();
-        if (response.data.length !== 0) {
-          response.data.map((todo) => this.todos.push(todo));
+        const res = await UploadService.getListFileData();
+        if (res.data.length !== 0) {
+          this.updateToDoList(res.data.message);
         }
       } catch (error) {
-        this.$vToastify.error(error.message);
+        this.$vToastify.error(`Error file data: ${error.message}`);
       }
     },
     async onEnter() {
@@ -124,7 +127,7 @@ export default {
         const res = await UploadService.saveFile(updatedTodo);
         this.updateToDoList(res.data.message);
       } catch (error) {
-        this.$vToastify.error(error.message);
+        this.$vToastify.error(`Error save data: ${error.message}`);
       }
     },
     async updateToDoList(msg) {
@@ -136,7 +139,7 @@ export default {
         }
         this.$vToastify.success(msg);
       } catch (error) {
-        this.$vToastify.error(error.message);
+        this.$vToastify.error(`Error update data: ${error.message}`);
       }
     },
     setToDone(id) {
@@ -155,7 +158,7 @@ export default {
         const res = await UploadService.deleteFile(deleteTodo[0]);
         this.updateToDoList(res.data.message);
       } catch (error) {
-        this.$vToastify.error(error.message);
+        this.$vToastify.error(`Error delete file: ${error.message}`);
       }
     },
     async downloadTodo(id) {
@@ -163,7 +166,7 @@ export default {
       try {
         await UploadService.downloadFile(downloadTodo[0]);
       } catch (error) {
-        this.$vToastify.error(error.message);
+        this.$vToastify.error(`Error download file: ${error.message}`);
       }
     },
   },

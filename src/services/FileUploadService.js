@@ -9,9 +9,7 @@ const http = axios.create({
 
 const upload = (file, onUploadProgress) => {
   let formData = new FormData();
-
   formData.append('file', file);
-
   return http.post('/upload', formData, {
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -45,7 +43,8 @@ const deleteFile = (data) => {
 };
 
 const downloadFile = (data) => {
-  return http.get(`/download/${data.title}/${data.id}`);
+  const fileName = `${data.title}_${data.id}.txt`;
+  return http.get(`/download/${fileName}`);
 };
 
 export default {

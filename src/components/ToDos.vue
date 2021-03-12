@@ -13,29 +13,34 @@
             <v-col align="left" class="overline">
               {{ todo.title }}
             </v-col>
-            <v-col class="caption">
+            <v-col class="overline">
               {{ moment(todo.timestamp) }}
             </v-col>
           </v-row>
         </v-container>
       </v-list-item-content>
       <v-list-item-icon>
-        <v-tooltip left>
-          <template v-slot:activator="{ on, attrs }">
-            <v-icon v-on:click="downloadTodo(todo.id)" v-bind="attrs" v-on="on"
-              >mdi-file-download</v-icon
-            >
-          </template>
-          <span>Download</span>
-        </v-tooltip>
-        <v-tooltip left>
-          <template v-slot:activator="{ on, attrs }">
-            <v-icon v-on:click="deleteTodo(todo.id)" v-bind="attrs" v-on="on"
-              >mdi-delete</v-icon
-            >
-          </template>
-          <span>Delete</span>
-        </v-tooltip>
+        <v-col justify="center">
+          <v-tooltip left>
+            <template v-slot:activator="{ on, attrs }">
+              <v-icon
+                v-on:click="downloadTodo(todo.id)"
+                v-bind="attrs"
+                v-on="on"
+                >mdi-file-download</v-icon
+              >
+            </template>
+            <span>Download</span>
+          </v-tooltip>
+          <v-tooltip left>
+            <template v-slot:activator="{ on, attrs }">
+              <v-icon v-on:click="deleteTodo(todo.id)" v-bind="attrs" v-on="on"
+                >mdi-delete</v-icon
+              >
+            </template>
+            <span>Delete</span>
+          </v-tooltip>
+        </v-col>
       </v-list-item-icon>
     </v-list-item>
   </v-list>
