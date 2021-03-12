@@ -18,10 +18,6 @@ const upload = (file, onUploadProgress) => {
   });
 };
 
-const getFile = (fileName) => {
-  return http.get(`/fileData/${fileName}`);
-};
-
 const getListFileData = () => {
   return http.get('/listFileData');
 };
@@ -42,16 +38,9 @@ const deleteFile = (data) => {
   });
 };
 
-const downloadFile = (data) => {
-  const fileName = `${data.title}_${data.id}.txt`;
-  return http.get(`/download/${fileName}`);
-};
-
 export default {
   upload,
   saveFile,
   deleteFile,
-  getFile,
   getListFileData,
-  downloadFile,
 };
